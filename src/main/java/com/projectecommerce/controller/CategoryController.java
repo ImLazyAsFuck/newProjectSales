@@ -20,10 +20,10 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<APIResponse<PagedResultDTO<Category>>> getAll(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        PagedResultDTO<Category> result = categoryService.getAllCategories(page, size);
+        PagedResultDTO<Category> result = categoryService.getAllCategories(page - 1, size);
         return ResponseEntity.ok(APIResponse.<PagedResultDTO<Category>>builder()
                 .data(result)
                 .message("Danh sách danh mục")

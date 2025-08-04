@@ -81,4 +81,9 @@ public class CustomUserDetails implements UserDetails {
                 .phone(phone)
                 .build();
     }
+
+    public boolean hasRole(String role){
+        return authorities.stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + role));
+    }
 }

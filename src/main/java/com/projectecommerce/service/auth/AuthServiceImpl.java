@@ -77,6 +77,13 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElseThrow(() -> new ConflictException("Không tìm thấy người dùng"));
 
+        if(user.isDeleted()){
+            throw new IllegalArgumentException("Người dùng đã bị xoá");
+        }
+        if(!user.isStatus()){
+            throw new ConflictException("Người dùng đã bị khoá");
+        }
+
         String token = jwtTokenProvider.generateToken(user.getUsername());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
         ERole role = user.getRoles().iterator().next().getName();

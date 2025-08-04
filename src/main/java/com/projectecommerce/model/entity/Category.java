@@ -23,10 +23,8 @@ public class Category{
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
     private LocalDate createAt;
 
-    @Column(nullable = false)
     private LocalDate updateAt;
 
     @PrePersist

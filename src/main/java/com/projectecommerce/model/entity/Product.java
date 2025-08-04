@@ -36,13 +36,10 @@ public class Product{
     @Column(nullable = false)
     private double price;
 
-    @Column(nullable = false)
     private LocalDate deletedAt;
 
-    @Column(nullable = false)
     private LocalDate createdAt;
 
-    @Column(nullable = false)
     private LocalDate updatedAt;
 
     @PrePersist

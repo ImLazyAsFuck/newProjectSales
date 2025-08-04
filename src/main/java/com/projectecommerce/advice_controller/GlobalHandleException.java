@@ -20,6 +20,21 @@ import java.util.*;
 @RestControllerAdvice
 public class GlobalHandleException extends ResponseEntityExceptionHandler{
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<APIResponse<?>> handleIllegalArgument(IllegalArgumentException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(APIResponse.builder()
+                .success(false)
+                .message("Dữ liệu không hợp lệ")
+                .errors(errors)
+                .data(null)
+                .timeStamp(LocalDateTime.now())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,

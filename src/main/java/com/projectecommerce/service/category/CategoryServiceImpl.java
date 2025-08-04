@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService{
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
 
         PaginationDTO pagination = PaginationDTO.builder()
-                .currentPage(categoryPage.getNumber())
+                .currentPage(categoryPage.getNumber() + 1)
                 .pageSize(categoryPage.getSize())
                 .totalItems(categoryPage.getTotalElements())
                 .totalPages(categoryPage.getTotalPages())
@@ -73,6 +73,6 @@ public class CategoryServiceImpl implements CategoryService{
         if(productRepository.existsByCategoryId(id)){
             throw new IllegalArgumentException("Can't delete category with id: " + id + " because it has products");
         }
-        categoryRepository.delete(category);
+        categoryRepository.deleteById(category.getId());
     }
 }

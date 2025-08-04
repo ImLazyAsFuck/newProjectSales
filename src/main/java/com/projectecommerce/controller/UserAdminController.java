@@ -20,10 +20,10 @@ public class UserAdminController {
 
     @GetMapping
     public ResponseEntity<APIResponse<PagedResultDTO<UserSummaryDTO>>> listUsers(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        APIResponse<PagedResultDTO<UserSummaryDTO>> response = adminUserService.listUsers(page, size);
+        APIResponse<PagedResultDTO<UserSummaryDTO>> response = adminUserService.listUsers(page - 1, size);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -46,6 +46,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/categories/{id}").hasAnyRole("ADMIN", "SALES")
                         .requestMatchers(HttpMethod.DELETE, "/api/categories/{id}").hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products").hasAnyRole("ADMIN", "SALES")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("ADMIN", "SALES")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasRole("ADMIN")
+
+                        .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
+
+                        .requestMatchers("/api/orders/**").hasAnyRole("CUSTOMER", "ADMIN", "SALES")
+
+                        .requestMatchers("/api/invoices/**").hasAnyRole("ADMIN", "SALES")
+
+                        .requestMatchers("/api/payments/**").hasAnyRole("CUSTOMER", "ADMIN", "SALES")
+
+                        .requestMatchers("/api/reports/**").hasAnyRole("ADMIN", "SALES")
+
                         .anyRequest().authenticated()
                 )
 
