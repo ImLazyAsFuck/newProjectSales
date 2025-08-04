@@ -43,6 +43,7 @@ public class CustomUserDetails implements UserDetails {
                 .status(user.isStatus())
                 .avatar(user.getAvatar())
                 .address(user.getAddress())
+                .status(user.isStatus())
                 .phone(user.getPhone())
                 .authorities(authorities)
                 .build();

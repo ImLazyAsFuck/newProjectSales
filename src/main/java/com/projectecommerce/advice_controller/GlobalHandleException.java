@@ -71,10 +71,17 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler{
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Object> handleBadCredentials(BadCredentialsException ex){
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("status", 401, "message", "Invalid credentials"));
+    public ResponseEntity<APIResponse<?>> handleBadCredentials(BadCredentialsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Invalid username or password");
+        
+        return new ResponseEntity<>(APIResponse.builder()
+                .success(false)
+                .message("Authentication failed")
+                .errors(errors)
+                .data(null)
+                .timeStamp(LocalDateTime.now())
+                .build(), HttpStatus.UNAUTHORIZED);
     }
 
 

@@ -6,6 +6,7 @@ import com.projectecommerce.model.dto.response.PagedResultDTO;
 import com.projectecommerce.model.dto.response.PaginationDTO;
 import com.projectecommerce.model.dto.response.UserSummaryDTO;
 import com.projectecommerce.model.entity.User;
+import com.projectecommerce.model.enums.ERole;
 import com.projectecommerce.repository.UserRepository;
 import com.projectecommerce.service.adminuser.AdminUserService;
 import com.projectecommerce.utils.exception.ConflictException;
@@ -132,6 +133,16 @@ public class AdminUserServiceImpl implements AdminUserService{
     public APIResponse<?> updateStatus(Long id, boolean status) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        if(user.isDeleted()){
+            throw new ConflictException("User is already deleted");
+        }
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals(ERole.ADMIN));
+
+        if (isAdmin) {
+            throw new ConflictException("Không thể cập nhật trạng thái của tài khoản Admin");
+        }
 
         user.setStatus(status);
         userRepository.save(user);

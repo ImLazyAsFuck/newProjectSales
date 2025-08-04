@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -45,6 +46,27 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    @Override
+    @Transactional
+    public void updateOrderInfo(Integer orderId, Long userId, String address, String notes) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        if (!order.getUser().getId().equals(userId)) {
+            throw new ConflictException("Not allowed to update this order");
+        }
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException("Only pending orders can be updated");
+        }
+
+        order.setShippingAddress(address);
+        order.setInternalNotes(notes);
+        orderRepository.save(order);
+    }
+
+
+    @Transactional
     @Override
     public Order createOrderFromCart(Long userId, String shippingAddress) {
         List<CartItem> cartItems = cartItemRepository.findByUserId(userId);
@@ -89,10 +111,38 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrderStatus(Integer orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        if (order.getStatus() == OrderStatus.SHIPPED) {
-            throw new IllegalStateException("Cannot update a delivered order.");
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException("Only pending orders can be updated");
         }
+
         order.setStatus(status);
         orderRepository.save(order);
     }
+
+    @Override
+    @Transactional
+    public void cancelOrder(Integer orderId, Long userId, String reason) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        boolean isOwner = order.getUser().getId().equals(userId);
+        if (!isOwner) {
+            throw new ConflictException("Not allowed to cancel this order");
+        }
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException("Only pending orders can be canceled");
+        }
+
+        for (OrderItem item : order.getOrderItems()) {
+            Product product = item.getProduct();
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setInternalNotes((order.getInternalNotes() != null ? order.getInternalNotes() + " | " : "") + "Cancel reason: " + reason);
+        orderRepository.save(order);
+    }
+
 }

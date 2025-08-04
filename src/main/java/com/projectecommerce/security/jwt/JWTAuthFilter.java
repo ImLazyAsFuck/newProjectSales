@@ -25,7 +25,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private static final List<String> PUBLIC_URLS = List.of(
             "/api/auth/register",
-            "/api/auth/login"
+            "/api/auth/login",
+            "/api/auth/verify"
     );
 
     @Override

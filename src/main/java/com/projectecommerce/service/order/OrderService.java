@@ -9,4 +9,6 @@ public interface OrderService {
     Order getOrderDetail(Integer orderId, Long userId, boolean isAdmin);
     Order createOrderFromCart(Long userId, String shippingAddress);
     void updateOrderStatus(Integer orderId, OrderStatus status);
+    void updateOrderInfo(Integer orderId, Long userId, String address, String notes);
+    void cancelOrder(Integer orderId, Long userId, String reason);
 }

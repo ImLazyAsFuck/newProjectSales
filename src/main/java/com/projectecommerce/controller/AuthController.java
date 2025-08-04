@@ -5,6 +5,7 @@ import com.projectecommerce.model.dto.request.*;
 import com.projectecommerce.model.dto.response.*;
 import com.projectecommerce.model.entity.User;
 import com.projectecommerce.service.auth.AuthService;
+import com.projectecommerce.service.verify.VerificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final VerificationService verificationService;
 
     @PostMapping("/register")
     public ResponseEntity<APIResponse<Void>> register(@RequestBody @Valid RegisterDTO dto) {
@@ -36,15 +38,16 @@ public class AuthController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<APIResponse<Void>> verify(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
-        authService.verify(user);
+    public ResponseEntity<APIResponse<Void>> verify(@RequestParam String token, @RequestBody @Valid LoginDTO dto) {
+        verificationService.verifyToken(token);
         return ResponseEntity.ok(APIResponse.<Void>builder()
                 .success(true)
-                .message("Xác thực tài khoản thành công")
+                .message("Xác thực tài khoản thành công!")
                 .timeStamp(LocalDateTime.now())
                 .build());
     }
+
+
 
     @GetMapping("/profile")
     public ResponseEntity<APIResponse<UserSummaryDTO>> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {

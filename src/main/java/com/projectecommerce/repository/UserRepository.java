@@ -1,6 +1,7 @@
 package com.projectecommerce.repository;
 
 import com.projectecommerce.model.entity.User;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,5 @@ public interface UserRepository extends JpaRepository<User, Long>{
     boolean existsByEmailAndIdNot(String email, Long id);
     boolean existsByPhoneAndIdNot(String phone, Long id);
 
+    Optional<User> findByUsernameAndPassword(@NotBlank(message = "Username cannot be blank") String username, @NotBlank(message = "Password cannot be blank") String password);
 }

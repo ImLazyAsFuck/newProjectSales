@@ -12,7 +12,7 @@ import com.projectecommerce.model.entity.User;
 public interface AuthService {
     void register(RegisterDTO registerDTO);
     APIResponse<JWTResponse> login(LoginDTO loginDTO);
-    void verify(User user);
+    void verify(LoginDTO loginDTO, String token);
     UserSummaryDTO getProfile(User user);
     void updateProfile(User user, UpdateProfileDTO dto);
     void changePassword(User user, ChangePasswordDTO dto);
