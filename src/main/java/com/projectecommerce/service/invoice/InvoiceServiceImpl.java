@@ -72,7 +72,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<ReportDTO> getMonthlyRevenue() {
         return invoiceRepository.getMonthlyRevenue().stream()
-                .map(row -> new ReportDTO((Integer) row[0], (Number) row[1]))
+                .map(row -> new ReportDTO())
                 .collect(Collectors.toList());
     }
 }

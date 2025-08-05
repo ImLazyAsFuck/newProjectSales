@@ -1,13 +1,17 @@
 package com.projectecommerce.model.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@NoArgsConstructor
+import java.math.BigDecimal;
+
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ReportDTO {
     private Integer timeUnit;
-    private Number totalAmount;
+    private BigDecimal totalAmount;
 }

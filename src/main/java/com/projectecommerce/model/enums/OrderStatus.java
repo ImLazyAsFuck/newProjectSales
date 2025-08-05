@@ -1,5 +1,5 @@
 package com.projectecommerce.model.enums;
 
 public enum OrderStatus {
-    PENDING, CONFIRMED, SHIPPED, CANCELLED
+    PENDING, CONFIRMED, SHIPPED, CANCELLED, DENIED
 }

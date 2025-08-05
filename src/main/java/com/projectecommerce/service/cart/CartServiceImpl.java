@@ -32,6 +32,9 @@ public class CartServiceImpl implements CartService {
     public CartResponseDTO addToCart(Long userId, CartRequestDTO dto) {
         Product product = productRepository.findByIdAndIsDeletedFalse(dto.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        if (product.getStock() < dto.getQuantity() || product.getStock() <= 0) {
+            throw new IllegalStateException("Insufficient stock for product " + product.getName());
+        }
         CartItem item = cartItemRepository.findByUserIdAndProductId(userId, dto.getProductId())
                 .orElse(CartItem.builder()
                         .user(userRepository.getReferenceById(userId))
